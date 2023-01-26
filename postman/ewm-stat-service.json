@@ -1,13 +1,13 @@
 {
   "info": {
-    "_postman_id": "93bfb851-d76c-42e2-9a6c-e33b581f35bd",
-    "name": "\"Explore with me\" API статистика",
+    "_postman_id": "144d1ccf-999b-45ac-a135-fc64e981b034",
+    "name": "stats-svc tests",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "13708500"
+    "_exporter_id": "23073145"
   },
   "item": [
     {
-      "name": "Сохранение информации о том, что к эндпоинту был запрос",
+      "name": "Тест корреткной работы сохранения и просмотра количества просмотров",
       "event": [
         {
           "listen": "prerequest",
@@ -17,135 +17,20 @@
               "    const api = new API(pm);\r",
               "    const rnd = new RandomUtils();\r",
               "\r",
-              "    let post;\r",
               "    try {\r",
-              "        post = rnd.getPost();\r",
-              "    } catch(err) {\r",
-              "        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
-              "    }\r",
-              "\r",
-              "    pm.request.body.update({\r",
-              "        mode: 'raw',\r",
-              "        raw: JSON.stringify(post),\r",
-              "        options: { raw: { language: 'json' } }\r",
-              "    });\r",
-              "};\r",
-              "\r",
-              "const interval = setInterval(() => {}, 1000);\r",
-              "\r",
-              "setTimeout(async () => \r",
-              "    {\r",
-              "        try {\r",
-              "            await main();\r",
-              "        } catch (e) {\r",
-              "            console.error(e);\r",
-              "        } finally {\r",
-              "            clearInterval(interval);\r",
-              "        }\r",
-              "    },  \r",
-              "    100 \r",
-              ");"
-            ],
-            "type": "text/javascript"
-          }
-        },
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
-              "    pm.response.to.be.ok;\r",
-              "});\r",
-              ""
-            ],
-            "type": "text/javascript"
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "{{baseUrl}}/hit",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "hit"
-          ]
-        },
-        "description": "Сохранение информации о том, что на uri конкретного сервиса был отправлен запрос пользователем. Название сервиса, uri и ip пользователя указаны в теле запроса."
-      },
-      "response": [
-        {
-          "name": "Информация сохранена",
-          "originalRequest": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"app\": \"ewm-main-service\",\n  \"uri\": \"/events/1\",\n  \"ip\": \"192.163.0.1\",\n  \"timestamp\": \"2022-09-06 11:00:23\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseUrl}}/hit",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "hit"
-              ]
-            }
-          },
-          "status": "OK",
-          "code": 200,
-          "_postman_previewlanguage": "text",
-          "header": [
-            {
-              "key": "Content-Type",
-              "value": "text/plain"
-            }
-          ],
-          "cookie": [],
-          "body": ""
-        }
-      ]
-    },
-    {
-      "name": "Получение статистики по посещениям. Обратите внимание: значение даты и времени нужно закодировать (например используя java.net.URLEncoder.encode) ",
-      "event": [
-        {
-          "listen": "prerequest",
-          "script": {
-            "exec": [
-              "const main = async () => {\r",
-              "    const api = new API(pm);\r",
-              "    const rnd = new RandomUtils();\r",
-              "\r",
-              "    let post, data;\r",
-              "    try {      \r",
-              "        post = rnd.getPost()\r",
-              "        console.log(post)\r",
-              "        await api.addPost(post)\r",
-              "        pm.collectionVariables.set(\"uri\", post.uri)\r",
+              "        pm.collectionVariables.set(\"uri\", '/events/1&uris=/events/2');\r",
+              "        let post1 = rnd.getPost();\r",
+              "        let post2 = rnd.getPost();\r",
+              "        post1['uri'] = '/events/1';\r",
+              "        post2['uri'] = '/events/2';\r",
+              "        await api.addPost(post1);\r",
+              "        await api.addPost(post2);\r",
+              "        await api.addPost(post2);\r",
+              "        let source = await api.getPosts(['/events/1', '/events/2']);\r",
+              "        await api.addPost(post1);\r",
+              "        await api.addPost(post2);\r",
+              "        pm.collectionVariables.set('source', source);\r",
+              "        \r",
               "    } catch(err) {\r",
               "        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
               "    }\r",
@@ -179,10 +64,22 @@
               "    pm.response.to.be.json;\r",
               "});\r",
               "\r",
-              "const target = pm.response.json()[0];\r",
+              "const target = pm.response.json();\r",
+              "const source = pm.collectionVariables.get('source');\r",
+              "\r",
               "\r",
               "pm.test(\"Посты должны содержать поля: app, uri, hits\", function () {\r",
-              "    pm.expect(target).to.have.all.keys('app', 'uri', 'hits');\r",
+              "    pm.expect(target[0]).to.have.all.keys('app', 'uri', 'hits');\r",
+              "    pm.expect(target[1]).to.have.all.keys('app', 'uri', 'hits');\r",
+              "});\r",
+              "\r",
+              "pm.test(\"В теле ответа должна соблюдаться сортировка по убыванию количества просмотров\", function(){\r",
+              "    pm.expect(target[0].hits).to.be.above(target[1].hits);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Проверка соответствия реального количества просмотров событий и сохраненных хитов\", function(){\r",
+              "    pm.expect(source[0].hits+1).equal(target[0].hits);\r",
+              "    pm.expect(source[1].hits+1).equal(target[1].hits);\r",
               "});"
             ],
             "type": "text/javascript"
@@ -198,7 +95,7 @@
           }
         ],
         "url": {
-          "raw": "{{baseUrl}}/stats?start=2020-05-05 00:00:00&end=2023-05-05 00:00:00&uris={{uri}}&unique=false",
+          "raw": "{{baseUrl}}/stats?start=2020-05-05 00:00:00&end=2035-05-05 00:00:00&uris={{uri}}",
           "host": [
             "{{baseUrl}}"
           ],
@@ -213,7 +110,7 @@
             },
             {
               "key": "end",
-              "value": "2023-05-05 00:00:00",
+              "value": "2035-05-05 00:00:00",
               "description": "(Required) Дата и время конца диапазона за который нужно выгрузить статистику (в формате \"yyyy-MM-dd HH:mm:ss\")"
             },
             {
@@ -230,62 +127,13 @@
             {
               "key": "unique",
               "value": "false",
-              "description": "Нужно ли учитывать только уникальные посещения (только с уникальным ip)"
+              "description": "Нужно ли учитывать только уникальные посещения (только с уникальным ip)",
+              "disabled": true
             }
           ]
         }
       },
-      "response": [
-        {
-          "name": "Статистика собрана",
-          "originalRequest": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/stats?start=amet non occaecat consequat&end=amet non occaecat consequat&uris=dolore nostrud Ut quis&uris=reprehenderit elit irure&unique=false",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "stats"
-              ],
-              "query": [
-                {
-                  "key": "start",
-                  "value": "amet non occaecat consequat"
-                },
-                {
-                  "key": "end",
-                  "value": "amet non occaecat consequat"
-                },
-                {
-                  "key": "uris",
-                  "value": "dolore nostrud Ut quis"
-                },
-                {
-                  "key": "uris",
-                  "value": "reprehenderit elit irure"
-                },
-                {
-                  "key": "unique",
-                  "value": "false"
-                }
-              ]
-            }
-          },
-          "status": "OK",
-          "code": 200,
-          "_postman_previewlanguage": "json",
-          "header": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
-          "cookie": [],
-          "body": "[\n  {\n    \"app\": \"ewm-main-service\",\n    \"uri\": \"/events/1\",\n    \"hits\": 6\n  },\n  {\n    \"app\": \"ewm-main-service\",\n    \"uri\": \"/events/1\",\n    \"hits\": 6\n  }\n]"
-        }
-      ]
+      "response": []
     }
   ],
   "event": [
@@ -305,15 +153,24 @@
           "        return this.post(\"/hit\", post, \"Ошибка при сохранении информации о запросе к эндпойнту: \", verbose);",
           "    }",
           "",
+          "    async getPosts(uris=null, verbose=null) {",
+          "        temp = uris == null ? \"/stats?start=2020-05-05 00:00:00&end=2035-05-05 00:00:00\" : \"/stats?start=2020-05-05 00:00:00&end=2035-05-05 00:00:00&uris=\"+uris.join('&uris=');",
+          "        return this.get(path=temp, errorText=\"Ошибка при сохранении информации о запросе к эндпойнту: \", verbose=verbose);",
+          "    }",
           "",
           "    async post(path, body, errorText = \"Ошибка при выполнении post-запроса: \", verbose=null) {",
           "        return this.sendRequest(\"POST\", path, body, errorText);",
           "    }",
           "",
+          "    async get(path, body = null, errorText = \"Ошибка при выполнении get-запроса: \", verbose=null) {",
+          "        return this.sendRequest(\"GET\", path, body, errorText);",
+          "    }",
+          "",
           "    async sendRequest(method, path, body=null, errorText = \"Ошибка при выполнении запроса: \", verbose=null) {",
           "        return new Promise((resolve, reject) => {",
           "            verbose = verbose == null ? this._verbose : verbose;",
-          "            const request = {",
+          "",
+          "            let request = {",
           "                url: this.baseUrl + path,",
           "                method: method,",
           "                body: body == null ? \"\" : JSON.stringify(body),",
@@ -361,7 +218,7 @@
           "    getPost() {",
           "        return {",
           "            app: \"ewm-main-service\",",
-          "            uri: \"/event/\" + pm.variables.replaceIn('{{$randomInt}}'),",
+          "            uri: \"/events/\" + pm.variables.replaceIn('{{$randomInt}}'),",
           "            ip: pm.variables.replaceIn('{{$randomIP}}'),",
           "            timestamp: this.getPastDateTime()",
           "        }",
@@ -377,6 +234,7 @@
           "",
           "        return m.format('YYYY-MM-DD HH:mm:ss');",
           "    }",
+          "",
           "}"
         ]
       }
@@ -400,6 +258,10 @@
     {
       "key": "uri",
       "value": "1"
+    },
+    {
+      "key": "source",
+      "value": ""
     }
   ]
 }
