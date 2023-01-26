@@ -1,10 +1,8 @@
 package ru.practicum.stats.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.ewm.Constants;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -19,6 +17,6 @@ public class StatInDto {
     @NotNull
     String ip;
     @NotNull
-    @JsonFormat(pattern = Constants.DATE_TIME_STRING)
+    //@JsonFormat(pattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
     LocalDateTime timestamp;
 }
