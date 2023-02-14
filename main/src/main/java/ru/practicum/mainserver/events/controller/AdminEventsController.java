@@ -29,8 +29,8 @@ public class AdminEventsController {
     public List<EventOutDto> findAllEvents(@RequestParam(name = "text", required = false) List<Long> userIds,
                                      @RequestParam(name = "states", required = false) List<String> states,
                                      @RequestParam(name = "categories", required = false) List<Long> categories,
-                                     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeStart,
-                                     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime rangeEnd,
+                                     @DateTimeFormat(pattern = ru.practicum.common.dtoStats.DateTimeFormat.DATE_TIME_FORMAT) LocalDateTime rangeStart,
+                                     @DateTimeFormat(pattern = ru.practicum.common.dtoStats.DateTimeFormat.DATE_TIME_FORMAT) LocalDateTime rangeEnd,
                                      @RequestParam(name = "from", required = false, defaultValue = "0") Integer from,
                                      @RequestParam(name = "size", required = false, defaultValue = "10") Integer size) {
         log.info("Admin findAllEvents: {},{},{},{},{},{},{}", userIds, states, categories, rangeStart, rangeEnd, from, size);

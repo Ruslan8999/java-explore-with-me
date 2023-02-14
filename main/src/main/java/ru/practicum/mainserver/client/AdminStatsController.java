@@ -23,7 +23,7 @@ public class AdminStatsController {
     public ResponseEntity<Object> getHits(@NotNull @RequestParam(name = "start") String start,
                                           @NotNull @RequestParam(name = "end") String end,
                                           @Valid
-                                          @RequestParam(name = "uris", defaultValue = "", required = false) List<String> uris,
+                                          @RequestParam(name = "uris", defaultValue = "") List<String> uris,
                                           @RequestParam(name = "unique", defaultValue = "false") Boolean unique) {
         log.info("getHits: {},{},{},{}", start, end, uris, unique);
         return adminStatsClient.getHits(start, end, uris, unique);

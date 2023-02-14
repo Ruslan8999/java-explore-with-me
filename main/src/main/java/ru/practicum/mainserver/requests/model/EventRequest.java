@@ -21,9 +21,9 @@ public class EventRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToOne
+    @ManyToOne
     private User requester;
-    @OneToOne
+    @ManyToOne
     private Event event;
     @Enumerated(EnumType.STRING)
     private RequestStatus state;

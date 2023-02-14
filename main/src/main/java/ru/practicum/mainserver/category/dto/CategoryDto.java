@@ -5,8 +5,6 @@ import lombok.experimental.NonFinal;
 
 import javax.validation.constraints.NotNull;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Setter
 @Getter
 @Builder

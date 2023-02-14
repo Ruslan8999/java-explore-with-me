@@ -6,8 +6,6 @@ import lombok.experimental.NonFinal;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Setter
 @Getter
 @Builder

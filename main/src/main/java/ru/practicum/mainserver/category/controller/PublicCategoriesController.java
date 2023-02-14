@@ -18,8 +18,8 @@ public class PublicCategoriesController {
     private final CategoryService categoryService;
 
     @GetMapping()
-    public List<CategoryDto> findAll(@PositiveOrZero @RequestParam(name = "from", required = false, defaultValue = "0") Integer from,
-                                     @Positive @RequestParam(name = "size", required = false, defaultValue = "10") Integer size) {
+    public List<CategoryDto> findAll(@PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                     @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Public findAllCategories: {},{}", from, size);
         return categoryService.getAllCategoriesPublic(from, size);
     }

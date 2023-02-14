@@ -16,6 +16,7 @@ import ru.practicum.mainserver.requests.model.EventRequest;
 import ru.practicum.mainserver.requests.repository.EventRequestRepository;
 import ru.practicum.mainserver.user.repository.UserRepository;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class EventRequestServiceImpl implements EventRequestService {
     private final EventRequestRepository repository;
     private final UserRepository userRepository;

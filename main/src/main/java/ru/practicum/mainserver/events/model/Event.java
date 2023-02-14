@@ -34,11 +34,12 @@ public class Event {
     private LocalDateTime publishedOn;
     private LocalDateTime createdOn;
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private State state;
-    @OneToOne
+    @ManyToOne
     private Category category;
-    @OneToOne
+    @ManyToOne
     private User initiator;
-    @OneToOne
+    @ManyToOne
     private Location location;
 }
