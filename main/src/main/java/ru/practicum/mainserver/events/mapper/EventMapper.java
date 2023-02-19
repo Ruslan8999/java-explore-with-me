@@ -25,6 +25,7 @@ public class EventMapper {
                 .state(event.getState())
                 .createdOn(event.getCreatedOn())
                 .publishedOn(event.getPublishedOn())
+                .comments(event.getComments())
                 .build();
     }
 

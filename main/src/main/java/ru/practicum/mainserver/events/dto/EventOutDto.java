@@ -5,11 +5,13 @@ import lombok.*;
 import lombok.experimental.NonFinal;
 import org.springframework.format.annotation.DateTimeFormat;
 import ru.practicum.mainserver.category.model.Category;
+import ru.practicum.mainserver.comment.model.Comment;
 import ru.practicum.mainserver.events.model.Location;
 import ru.practicum.mainserver.events.model.State;
 import ru.practicum.mainserver.user.model.User;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -56,4 +58,6 @@ public class EventOutDto {
     Location location;
     @NonFinal
     State state;
+    @NonFinal
+    List<Comment> comments;
 }

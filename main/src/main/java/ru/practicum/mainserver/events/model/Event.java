@@ -5,10 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.practicum.mainserver.category.model.Category;
+import ru.practicum.mainserver.comment.model.Comment;
 import ru.practicum.mainserver.user.model.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -41,4 +43,10 @@ public class Event {
     private User initiator;
     @OneToOne
     private Location location;
+    @OneToMany
+    private List<Comment> comments;
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
+    }
 }
