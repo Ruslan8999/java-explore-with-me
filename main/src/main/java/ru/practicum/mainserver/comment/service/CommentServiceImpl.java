@@ -83,9 +83,9 @@ public class CommentServiceImpl implements CommentService {
         List<Comment> result = new ArrayList<>();
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Item with id=%d not found", eventId)));
-        List<Comment> comment =  commentRepository.findAllCommentsByAuthorId(userId);
-        for (Comment com: event.getComments()){
-            if(comment.contains(com)){
+        List<Comment> comment = commentRepository.findAllCommentsByAuthorId(userId);
+        for (Comment com : event.getComments()) {
+            if (comment.contains(com)) {
                 result.add(com);
             } else {
                 throw new ResourceNotFoundException(String.format("User with id=%d not found", userId));
