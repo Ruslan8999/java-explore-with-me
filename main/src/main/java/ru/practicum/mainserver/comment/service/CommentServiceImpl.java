@@ -73,7 +73,7 @@ public class CommentServiceImpl implements CommentService {
         if (owner.isEmpty()) throw new ResourceNotFoundException(String.format("User with id=%d not found", userId));
 
         return commentRepository.findAllCommentsByAuthorId(userId).stream()
-                .filter(c -> c.getId() == commentId)
+                .filter(c -> c.getId().equals(commentId))
                 .map(CommentMapper::toCommentDto)
                 .collect(Collectors.toList());
     }
