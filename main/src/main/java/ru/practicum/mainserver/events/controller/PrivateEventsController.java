@@ -63,4 +63,9 @@ public class PrivateEventsController {
                                               @PathVariable Long eventId) {
         return commentService.createComment(commentInDto, userId, eventId);
     }
+
+    @GetMapping("/{eventId}/comments")
+    public List<CommentOutDto> getCommentOfUserAndEvent(@PathVariable Long userId, @PathVariable Long eventId) {
+        return commentService.getCommentOfUserAndEvent(userId, eventId);
+    }
 }

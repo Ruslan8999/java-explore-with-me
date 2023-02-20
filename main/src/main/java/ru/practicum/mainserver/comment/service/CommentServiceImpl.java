@@ -8,11 +8,15 @@ import ru.practicum.mainserver.comment.dto.CommentOutDto;
 import ru.practicum.mainserver.comment.mapper.CommentMapper;
 import ru.practicum.mainserver.comment.model.Comment;
 import ru.practicum.mainserver.comment.repository.CommentRepository;
+import ru.practicum.mainserver.events.model.Event;
 import ru.practicum.mainserver.events.repository.EventRepository;
 import ru.practicum.mainserver.exceptions.ResourceNotFoundException;
 import ru.practicum.mainserver.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -61,5 +65,34 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("comment with id=%d not found", commentId)));
         commentRepository.delete(comment);
         log.info(String.format("Comment with id=%d deleted", commentId));
+    }
+
+    @Override
+    public List<CommentOutDto> getCommentOfUser(Long commentId, Long userId) {
+        var owner = userRepository.findById(userId);
+        if (owner.isEmpty()) throw new ResourceNotFoundException(String.format("User with id=%d not found", userId));
+
+        return commentRepository.findAllCommentsByAuthorId(userId).stream()
+                .filter(c -> c.getId() == commentId)
+                .map(CommentMapper::toCommentDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CommentOutDto> getCommentOfUserAndEvent(Long userId, Long eventId) {
+        List<Comment> result = new ArrayList<>();
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Item with id=%d not found", eventId)));
+        List<Comment> comment =  commentRepository.findAllCommentsByAuthorId(userId);
+        for (Comment com: event.getComments()){
+            if(comment.contains(com)){
+                result.add(com);
+            } else {
+                throw new ResourceNotFoundException(String.format("User with id=%d not found", userId));
+            }
+        }
+        return result.stream()
+                .map(CommentMapper::toCommentDto)
+                .collect(Collectors.toList());
     }
 }

@@ -8,6 +8,7 @@ import ru.practicum.mainserver.comment.dto.CommentOutDto;
 import ru.practicum.mainserver.comment.service.CommentService;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/users/comments")
@@ -28,4 +29,10 @@ public class PrivateCommentsController {
                                               @PathVariable Long commentId) {
         return commentService.updateComment(commentInDto, commentId);
     }
+
+    @GetMapping("/{commentId}/{userId}")
+    public List<CommentOutDto> getCommentOfUser(@PathVariable Long commentId, @PathVariable Long userId) {
+        return commentService.getCommentOfUser(commentId, userId);
+    }
+
 }

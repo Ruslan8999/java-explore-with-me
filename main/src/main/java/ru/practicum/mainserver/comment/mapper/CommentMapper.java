@@ -1,9 +1,12 @@
 package ru.practicum.mainserver.comment.mapper;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import ru.practicum.mainserver.comment.dto.CommentInDto;
 import ru.practicum.mainserver.comment.dto.CommentOutDto;
 import ru.practicum.mainserver.comment.model.Comment;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CommentMapper {
     public static CommentOutDto toCommentDto(Comment comment) {
         return CommentOutDto.builder()
